@@ -1,9 +1,17 @@
 package com.example.project;
 
+import com.example.project.asset.Asset;
+import com.example.project.asset.AssetRepo;
+import com.example.project.bonds.Bond;
+import com.example.project.bonds.BondRepo;
 import com.example.project.broker.Broker;
 import com.example.project.broker.BrokerRepo;
+import com.example.project.property.Property;
+import com.example.project.property.PropertyRepo;
 import com.example.project.share.Share;
 import com.example.project.share.ShareRepo;
+import com.example.project.stock.Stock;
+import com.example.project.stock.StockRepo;
 import com.example.project.trader.Trader;
 import com.example.project.trader.TraderRepo;
 import com.example.project.transaction.Transaction;
@@ -11,8 +19,12 @@ import com.example.project.transaction.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class Controller {
@@ -25,6 +37,14 @@ public class Controller {
     private TransactionRepo transactionRepo;
     @Autowired
     private BrokerRepo brokerRepo;
+    @Autowired
+    private AssetRepo assetRepo;
+    @Autowired
+    private BondRepo bondRepo;
+    @Autowired
+    private PropertyRepo propertyRepo;
+    @Autowired
+    private StockRepo stockRepo;
 
     // --------------------------------------TRADER-------------------------------------
     // Get all traders
@@ -206,4 +226,119 @@ public class Controller {
     public void deleteBrokerById(@RequestParam long id){
         brokerRepo.deleteById(id);
     }
+
+    // --------------------------------------ASSETS-------------------------------------
+    //Add Asset
+    @PostMapping("addAsset")
+    public void addAsset(@RequestBody Asset asset)
+    {
+        assetRepo.save(asset);
+    }
+
+    //view all Assets
+    @GetMapping("getAssets")
+    public List<Asset> getAssets(){
+        return assetRepo.findAll();
+    }
+    //view all assets based on trader ID
+    @GetMapping("assets")
+    public List<Asset> fetchAssets(@RequestParam long id){
+        Optional<Trader> t = traderRepo.findById(id);
+        if(t.isPresent())
+        {
+            Trader t1 = t.get();
+            return assetRepo.findAssetsByTrader(t1);
+        }
+        return null;
+    }
+
+
+    // --------------------------------------STOCKS-------------------------------------
+    // --------------------------------------BONDS-------------------------------------
+    //add bond
+    @PostMapping("addBond")
+    public void addBond(@RequestBody Bond bond){
+        bondRepo.save(bond);
+    }
+
+    //view bonds
+    @GetMapping("getBonds")
+    public List<Bond> getBonds(){
+        return bondRepo.findAll();
+    }
+    //Calculate profit gained
+    @GetMapping("profitGained")
+    public double profitGained(@RequestBody Bond bond) throws ParseException {
+        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(bond.getDoi());
+        Date date2=new SimpleDateFormat("dd/MM/yyyy").parse("11/08/2022");
+        //Date dateBefore = bond.getDate_of_issue();
+        //Date today = new Date(2022, Calendar.AUGUST, 11);
+
+        long d1 = date1.getTime();
+        long d2 = date2.getTime();
+
+        long timeDiff = Math.abs(d2- d1);
+
+        double monthsDiff = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS)/30.0;
+        double profit = monthsDiff*bond.getPrinciple()*bond.getInterest_rate();
+
+        return profit;
+    }
+
+    //calculate total profit
+    @GetMapping("totalProfit")
+    public double totalProfit(@RequestBody Bond bond) throws ParseException {
+        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(bond.getMaturity_date());
+        Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(bond.getDoi());
+        //Date dateBefore = bond.getDate_of_issue();
+        //Date today = new Date(2022, Calendar.AUGUST, 11);
+
+        long d1 = date1.getTime();
+        long d2 = date2.getTime();
+
+        long timeDiff = Math.abs(d2 - d1);
+
+        double monthsDiff = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS)/30.0;
+        double total_profit = monthsDiff*bond.getPrinciple()*bond.getInterest_rate();
+
+        return total_profit;
+    }
+
+
+    // --------------------------------------PROPERTIES-------------------------------------
+
+    //add a Property
+    @PostMapping("addProp")
+    public void addProperty(@RequestBody Property property){
+        propertyRepo.save(property);
+    }
+
+    //view all properties
+    @GetMapping("getProperties")
+    public List<Property> getProperties()
+    {
+        return propertyRepo.findAll();
+    }
+
+    //check if we are at profit or loss
+    @GetMapping("checkProfit/{id}")
+    public String checkProfit(@PathVariable long id){
+        Property p1 = propertyRepo.findByid(id);
+        long val1 = p1.getBuying_price();
+        long val2 = p1.getCurrent_value();
+        if(val1<=val2)
+        {
+            double profit_percent = (val2-val1)*100.0;
+            return "Profit! "+profit_percent/val1+" %";
+
+        }
+        else
+        {
+            double loss_percent = (val1-val2)*100.0;
+            return "Loss! "+loss_percent/val1+" %";
+        }
+
+    }
+
+
 }
