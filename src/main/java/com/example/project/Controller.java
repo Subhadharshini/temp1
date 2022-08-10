@@ -1,5 +1,7 @@
 package com.example.project;
 
+import com.example.project.broker.Broker;
+import com.example.project.broker.BrokerRepo;
 import com.example.project.share.Share;
 import com.example.project.share.ShareRepo;
 import com.example.project.trader.Trader;
@@ -21,6 +23,8 @@ public class Controller {
     private ShareRepo shareRepo;
     @Autowired
     private TransactionRepo transactionRepo;
+    @Autowired
+    private BrokerRepo brokerRepo;
 
     // --------------------------------------TRADER-------------------------------------
     // Get all traders
@@ -126,6 +130,25 @@ public class Controller {
     // create or post Transaction
     @PostMapping("addTransaction")
     public void addTransaction(@RequestBody Transaction s){
+        Trader t = s.getTrader();
+        Share sh = s.getShare();
+
+        double price = s.getPrice();
+
+        if((s.getBuyOrSell()).equals("buy")) //Amount deducted for buying
+        {
+            if(t.getBalance() < price) {
+                System.out.println("Insufficient Balance");
+                return;
+            }
+            else
+                t.setBalance(t.getBalance() - price);
+        }
+        else
+            t.setBalance(t.getBalance() + price); //Amount added for selling
+
+        traderRepo.save(t);
+        shareRepo.save(sh);
         transactionRepo.save(s);
     }
 
@@ -153,5 +176,34 @@ public class Controller {
         transactionRepo.deleteById(id);
     }
 
+    // --------------------------------------BROKERS-------------------------------------
+    //add Broker
+    @PostMapping("addBroker")
+    public void addBroker(@RequestBody Broker b){
+        brokerRepo.save(b);
+    }
 
+    //view all Brokers
+    @GetMapping("getBrokers")
+    public List<Broker> getBrokers()
+    {
+        return brokerRepo.findAll();
+    }
+
+    @PostMapping("changeBrokerAccountDetails")
+    public void changeBrokerAccountDetails(@RequestBody Broker b){
+        Optional<Broker> broker1 = brokerRepo.findById(b.getId());
+        if(broker1.isPresent())
+        {
+            Broker b1 = broker1.get();
+            b1.setBroker_name(b.getBroker_name());
+            b1.setAccount_no(b.getAccount_no());
+            brokerRepo.save(b1);
+        }
+    }
+
+    @GetMapping("deleteBrokerById")
+    public void deleteBrokerById(@RequestParam long id){
+        brokerRepo.deleteById(id);
+    }
 }
