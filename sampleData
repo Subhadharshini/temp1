@@ -1,0 +1,17 @@
+{
+    "buyOrSell": "Buy",
+    "price": 10000,
+    "date": "10/08/2022",
+    "trader":{
+        "accountno": "10000100",
+        "balance": 20000,
+        "name": "Megal"
+    },
+    "share":{
+        "companyName":"Apple",
+        "companyCode":"AAP",
+        "unitCost":1000,
+        "highestPrice":2000,
+        "lowestPrice":1000
+    }
+}
