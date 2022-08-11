@@ -1,3 +1,118 @@
+//1
+{
+    "buyOrSell": "Buy",
+    "price": 10000,
+    "date": "10/08/2022",
+    "trader":{
+        "accountno": "10000100",
+        "balance": 20000,
+        "name": "Bob"
+    },
+    "share":{
+        "companyName":"Apple",
+        "companyCode":"AAP",
+        "unitCost":1000,
+        "highestPrice":2000,
+        "lowestPrice":1000
+    }
+}
+
+//2
+{
+    "buyOrSell": "Sell",
+    "price": 20000,
+    "date": "20/06/2022",
+    "trader":{
+        "accountno": "10000103",
+        "balance": 8000,
+        "name": "Megal"
+    },
+    "share":{
+        "companyName":"Google",
+        "companyCode":"GOOGL",
+        "unitCost":1500,
+        "highestPrice":1650,
+        "lowestPrice":1400
+    }
+}
+
+//3
+{
+    "buyOrSell": "Buy",
+    "price": 14000,
+    "date": "11/03/2022",
+    "trader":{
+        "accountno": "10000104",
+        "balance": 18000,
+        "name": "Bill"
+    },
+    "share":{
+        "companyName":"Netflix",
+        "companyCode":"NFLX",
+        "unitCost":2500,
+        "highestPrice":2650,
+        "lowestPrice":2400
+    }
+}
+
+//4
+{
+    "buyOrSell": "Sell",
+    "price": 19000,
+    "date": "28/10/2022",
+    "trader":{
+        "accountno": "10000102",
+        "balance": 5000,
+        "name": "Mark"
+    },
+    "share":{
+        "companyName":"Tesla",
+        "companyCode":"TSLA",
+        "unitCost":2600,
+        "highestPrice":3150,
+        "lowestPrice":2400
+    }
+}
+
+//5
+{
+    "buyOrSell": "Buy",
+    "price": 22000,
+    "date": "17/11/2022",
+    "trader":{
+        "accountno": "10000106",
+        "balance": 15000,
+        "name": "Jules"
+    },
+    "share":{
+        "companyName":"Meta Platforms",
+        "companyCode":"META",
+        "unitCost":3600,
+        "highestPrice":3150,
+        "lowestPrice":3400
+    }
+}
+
+//6
+{
+    "buyOrSell": "Sell",
+    "price": 19000,
+    "date": "12/12/2022",
+    "trader":{
+        "accountno": "10000107",
+        "balance": 2500,
+        "name": "Pat"
+    },
+    "share":{
+        "companyName":"Google",
+        "companyCode":"GOOGL",
+        "unitCost":1500,
+        "highestPrice":1650,
+        "lowestPrice":1400
+    }
+}
+
+//7
 {
     "buyOrSell": "Buy",
     "price": 10000,
